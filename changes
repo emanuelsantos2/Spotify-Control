@@ -1,0 +1,8 @@
+1.0.1
+
+Added Settings to the GUI so that the user can switch keys
+GUI now shows current song
+Added Settings Save and Delete buttons
+Added Volume Up/Down Keys set for Key Up and Down as default
+Keys now register themselves in the class constructor
+Added Methods to Read and Write to settings.ini file
