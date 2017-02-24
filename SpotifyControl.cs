@@ -19,6 +19,7 @@ namespace Spotify_Remote
         public bool isConnected = false;
         private const uint WM_APPCOMMAND = 0x0319;
         private Process spotifyProcess;
+        private string windowsUser = Environment.UserName;
 
         public enum SpotifyAction : long
         {
@@ -41,7 +42,7 @@ namespace Spotify_Remote
         {
             bool contSearch = true;
             IntPtr hWnd = IntPtr.Zero;
-            spotifyProcess = Process.Start("C:/Users/emaev/AppData/Roaming/Spotify/spotify.exe");
+            spotifyProcess = Process.Start("C:/Users/" + windowsUser +"/AppData/Roaming/Spotify/spotify.exe");
             System.Threading.Thread.Sleep(1000);
 
             while (contSearch)
