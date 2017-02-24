@@ -44,6 +44,7 @@ namespace Spotify_Remote
             this.key = (int)key;
             this.hWnd = form.Handle;
             id = this.GetHashCode();
+            Register();
         }
 
         public override int GetHashCode()
