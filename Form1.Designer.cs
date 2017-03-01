@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.label1 = new System.Windows.Forms.Label();
             this.comboPlay = new System.Windows.Forms.ComboBox();
@@ -38,6 +39,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.saveButton = new System.Windows.Forms.Button();
             this.deleteButton = new System.Windows.Forms.Button();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.trayButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -148,12 +151,30 @@
             this.deleteButton.UseVisualStyleBackColor = false;
             this.deleteButton.Click += new System.EventHandler(this.deleteButton_Click);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "Spotify-Remote";
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+            // 
+            // trayButton
+            // 
+            this.trayButton.Location = new System.Drawing.Point(330, 12);
+            this.trayButton.Name = "trayButton";
+            this.trayButton.Size = new System.Drawing.Size(42, 23);
+            this.trayButton.TabIndex = 9;
+            this.trayButton.Text = "Tray";
+            this.trayButton.UseVisualStyleBackColor = true;
+            this.trayButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.trayButton_MouseClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(375, 365);
+            this.Controls.Add(this.trayButton);
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.label4);
@@ -185,6 +206,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button deleteButton;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.Button trayButton;
     }
 }
 

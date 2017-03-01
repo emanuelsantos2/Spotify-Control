@@ -18,6 +18,7 @@ namespace Spotify_Remote
         SpotifyControl spotify;
 
         TypeConverter converter = TypeDescriptor.GetConverter(typeof(Keys));
+        System.Threading.Thread labelUpdate;
         public Form1()
         {
             InitializeComponent();
@@ -107,31 +108,26 @@ namespace Spotify_Remote
                 if (m.WParam.ToInt32() == play.GetHashCode())
                 {
                     spotify.SendCommand((long)SpotifyControl.SpotifyAction.PlayPause);
-                    UpdateLabel();
                 }
 
                 if (m.WParam.ToInt32() == next.GetHashCode())
                 {
                     spotify.SendCommand((long)SpotifyControl.SpotifyAction.NextTrack);
-                    UpdateLabel();
                 }
 
                 if (m.WParam.ToInt32() == previous.GetHashCode())
                 {
                     spotify.SendCommand((long)SpotifyControl.SpotifyAction.PreviousTrack);
-                    UpdateLabel();
                 }
 
                 if (m.WParam.ToInt32() == volumeDown.GetHashCode())
                 {
                     spotify.SendCommand((long)SpotifyControl.SpotifyAction.VolumeDown);
-                    UpdateLabel();
                 }
 
                 if (m.WParam.ToInt32() == volumeUp.GetHashCode())
                 {
                     spotify.SendCommand((long)SpotifyControl.SpotifyAction.VolumeUp);
-                    UpdateLabel();
                 }
             }
             catch(Exception e)
@@ -141,12 +137,30 @@ namespace Spotify_Remote
                 
             base.WndProc(ref m);
         }
+        
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.ShowInTaskbar = true;
+            notifyIcon.Visible = false;
+            this.Show();
+        }
+
+        private void trayButton_MouseClick(object sender, MouseEventArgs e)
+        {
+                this.ShowInTaskbar = false;
+                notifyIcon.Visible = true;
+                this.Hide();
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             comboPlay.SelectedText = spotify.playKey;
             comboPrevious.SelectedText = spotify.previousKey;
             comboNext.SelectedText = spotify.nextKey;
+            labelUpdate = new System.Threading.Thread(UpdateLabel);
+            labelUpdate.Start();
+
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -157,6 +171,7 @@ namespace Spotify_Remote
             volumeDown.Unregister();
             volumeUp.Unregister();
             spotify.CloseSpotify();
+            labelUpdate.Abort();
         }
 
         private void WriteLine(string text)
@@ -168,12 +183,23 @@ namespace Spotify_Remote
 
         private void UpdateLabel()
         {
-
-            System.Threading.Thread.Sleep(200);
-            Process spotifyProcess = Process.GetProcessById(spotify.processId);
-            string spotifyTitle = spotifyProcess.MainWindowTitle;
-
-            label1.Text = spotifyTitle;
+            while (true) {
+                System.Threading.Thread.Sleep(200);
+                Process spotifyProcess = Process.GetProcessById(spotify.processId);
+                string spotifyTitle = spotifyProcess.MainWindowTitle;
+                try
+                {
+                    BeginInvoke((MethodInvoker)delegate ()
+                    {
+                        label1.Text = spotifyTitle;
+                        System.Threading.Thread.Sleep(5);
+                    });
+                }
+                catch (Exception) { }
+                
+                
+            }
+            
         }
     }
 }

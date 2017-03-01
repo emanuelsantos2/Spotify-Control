@@ -124,8 +124,16 @@ namespace Spotify_Remote
         
         public void CloseSpotify()
         {
-            
+
+            try
+            {
                 spotifyProcess.Kill();
+            }
+            catch(Exception e)
+            {
+
+            }
+                
             
         }
         

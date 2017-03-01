@@ -1,4 +1,4 @@
-1.0.1
+1.0.0.3
 
 Added Settings to the GUI so that the user can switch keys
 GUI now shows current song
@@ -6,3 +6,8 @@ Added Settings Save and Delete buttons
 Added Volume Up/Down Keys set for Key Up and Down as default
 Keys now register themselves in the class constructor
 Added Methods to Read and Write to settings.ini file
+
+1.0.0.4
+Fixed exception error when killing spotify process
+Created thread to automatically change the label to the song title(Spotify Window Title)
+Added Minimize to Tray Button to the GUI(Needs Fixing)
