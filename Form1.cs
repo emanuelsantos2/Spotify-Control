@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Hotkeys;
+using System.IO;
 
 namespace Spotify_Remote
 {
@@ -183,10 +184,18 @@ namespace Spotify_Remote
 
         private void UpdateLabel()
         {
+            string temp = "Spotify";
+            bool downloadImage = false;
             while (true) {
                 System.Threading.Thread.Sleep(200);
                 Process spotifyProcess = Process.GetProcessById(spotify.processId);
                 string spotifyTitle = spotifyProcess.MainWindowTitle;
+                if(temp != spotifyTitle)
+                {
+                    temp = spotifyTitle;
+                    downloadImage = true;
+                }
+
                 try
                 {
                     BeginInvoke((MethodInvoker)delegate ()
@@ -196,10 +205,17 @@ namespace Spotify_Remote
                     });
                 }
                 catch (Exception) { }
-                
-                
+
+                if (downloadImage)
+                {
+                    spotify.DownloadTempBackground(spotifyTitle);
+                    panel1.BackgroundImage = null;
+                    GC.Collect();
+                    File.Copy("Temp/tempBackground.jpg", "Temp/background.jpg", true);
+                    panel1.BackgroundImage = Image.FromFile("Temp/background.jpg");
+                    downloadImage = false;
+                }
             }
-            
         }
     }
 }

@@ -11,3 +11,5 @@ Added Methods to Read and Write to settings.ini file
 Fixed exception error when killing spotify process
 Created thread to automatically change the label to the song title(Spotify Window Title)
 Added Minimize to Tray Button to the GUI(Needs Fixing)
+Fixed bug that caused the app to show the title of other applications
+The GUI will now update it's background with the current song album art

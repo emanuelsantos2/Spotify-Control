@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.IO;
+using System.Net;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Spotify_Remote
 {
+
+    
     class SpotifyControl
     {
-        
+
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
@@ -22,6 +27,7 @@ namespace Spotify_Remote
         private Process spotifyProcess;
         private string windowsUser = Environment.UserName;
         private const string settingsFile = "settings.ini";
+        private const string backgroundFile = "Temp/tempBackground.jpg";
         public string nextKey, playKey, previousKey;
         public int processId;
 
@@ -41,7 +47,7 @@ namespace Spotify_Remote
         {
             this.windowHandle = GetSpotifyWindowsHandle();
             ReadSettings();
-
+            CreateTempFolder();
         }
 
         private IntPtr GetSpotifyWindowsHandle()
@@ -57,7 +63,7 @@ namespace Spotify_Remote
 
                 for (int i = 0; i < processes.GetLength(0); i++)
                 {
-                    if (processes[i].MainWindowTitle.Contains("Spotify"))
+                    if (processes[i].MainWindowTitle == "Spotify")
                     {
                         hWnd = processes[i].MainWindowHandle;
                         processId = processes[i].Id;
@@ -67,6 +73,47 @@ namespace Spotify_Remote
             }
             isConnected = true;
             return hWnd;
+        }
+
+
+        private void CreateTempFolder()
+        {
+            if (!Directory.Exists("Temp"))
+            {
+                Directory.CreateDirectory("Temp");
+            }
+        }
+
+        public void DownloadTempBackground(string song)
+        {
+            WebClient web = new WebClient();
+            string imageUrl = "";
+            bool imageFound = false;
+
+            string json = web.DownloadString("https://api.spotify.com/v1/search?q=" + song + "&type=track&limit=1");
+            string[] data = json.Split('"');
+
+            for(int i = 0; i < data.Length; i++)
+            {
+                if(data[i] == "images")
+                {
+                    imageUrl = data[i + 6];
+                    imageFound = true;
+                }
+            }
+
+            if (imageFound)
+            {
+                if (File.Exists(backgroundFile))
+                {
+                    File.Delete(backgroundFile);
+                }
+                using (WebClient client = new WebClient())
+                {
+                    client.DownloadFile(imageUrl, backgroundFile);
+                    client.Dispose();
+                }
+            }
         }
 
         private void ReadSettings()
